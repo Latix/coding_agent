@@ -1,0 +1,35 @@
+name: Test Console Output
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Run test.js and validate output
+      run: |
+        echo "Running test.js..."
+        output=$(node test.js)
+        echo "Output: $output"
+        
+        # Validate that the output contains "Hello World"
+        if [[ "$output" == "Hello World" ]]; then
+          echo "✅ Test passed: Console output is correct"
+          exit 0
+        else
+          echo "❌ Test failed: Expected 'Hello World', got '$output'"
+          exit 1
+        fi
